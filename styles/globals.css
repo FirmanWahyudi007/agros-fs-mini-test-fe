@@ -1,3 +1,28 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+body {
+  @apply bg-[#F8F8F8];
+}
+
+.layout-container {
+  @apply mx-auto px-2 pt-20 md:px-1;
+}
+
+.navbar-fixed {
+  @apply fixed z-[9999] bg-white;
+}
+
+.card {
+  @apply mb-10 overflow-hidden bg-white rounded-md
+        shadow-xl transition-all duration-500 hover:rotate-2 hover:scale-95  sm:mb-0 sm:w-64 md:w-80 lg:w-72 xl:w-[400px];
+}
+
+.card-cover {
+  @apply block h-40 w-full overflow-hidden;
+}
+
+.card-cover-image {
+  @apply h-full w-full origin-center rounded-md  object-cover transition-all duration-500;
+}
