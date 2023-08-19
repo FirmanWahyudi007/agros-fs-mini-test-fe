@@ -7,7 +7,7 @@ const Hero = () => {
       <div
         className='w-full md:w-10/12 md:h-[236px] bg-transparent rounded-xl mx-auto'
         style={{
-          backgroundImage: 'url(/hero.png)',
+          backgroundImage: 'url(Hero.png)',
           backgroundRepeat: 'no-repeat',
           backgroundSize: 'cover',
         }}
