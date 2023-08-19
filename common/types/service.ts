@@ -1,4 +1,4 @@
-export type LayananProps = {
+export type ServiceProps = {
   title: string;
   description: string;
   image: string;

@@ -1,6 +1,6 @@
-import { LayananProps } from '@/common/types/layanan';
+import { ServiceProps } from '@/common/types/service';
 
-export const layananItems: LayananProps[] = [
+export const serviceItems: ServiceProps[] = [
   {
     title: 'AGROS Shipper',
     description:

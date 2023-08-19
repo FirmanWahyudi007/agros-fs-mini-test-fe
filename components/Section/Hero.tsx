@@ -1,4 +1,7 @@
+import { useRouter } from 'next/navigation';
+
 const Hero = () => {
+  const router = useRouter();
   return (
     <section className='mt-14 mb-1'>
       <div
@@ -19,10 +22,16 @@ const Hero = () => {
             barang sampai pada tujuan. Silakan melakukan pendaftaran untuk dapat
             menikmati layanan kami.
           </p>
-          <button className='bg-transparent hover:opacity-70 hover:shadow-sm active:opacity-100 rounded-lg border border-white px-4 mb-2 mx-2 md:mx-1 py-2 mt-3 md:mt-4'>
+          <button
+            onClick={() => router.push('/login')}
+            className='bg-transparent hover:opacity-70 hover:shadow-sm active:opacity-100 rounded-lg outline outline-1 px-4 mb-2 mx-2 md:mx-1 py-2 mt-3 md:mt-4'
+          >
             Masuk
           </button>
-          <button className='bg-white text-primary hover:bg-slate-100 hover:shadow-sm active:bg-white rounded-lg border border-white px-4 py-2 mt-3 mb-2 md:mt-4 md:ml-2'>
+          <button
+            onClick={() => router.push('/register')}
+            className='bg-white text-primary hover:bg-slate-100 hover:shadow-sm active:bg-white rounded-lg border border-white px-4 py-2 mt-3 mb-2 md:mt-4 md:ml-2'
+          >
             Daftar
           </button>
         </div>

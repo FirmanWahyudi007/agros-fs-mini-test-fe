@@ -13,7 +13,7 @@ const Header = () => {
   return (
     <header className='bg-white absolute top-0 left-0 w-full flex items-center z-10 navbar-fixed'>
       <div className='container'>
-        <div className='flex items-center justify-between relative py-5 lg:py-0'>
+        <div className='flex items-center relative justify-between py-5 lg:py-0'>
           <div className='px-4'>
             <Link href='/'>
               <Image
@@ -25,7 +25,7 @@ const Header = () => {
               />
             </Link>
           </div>
-          <div className='flex items-center px-4'>
+          <div className='px-4 flex items-center mr-28'>
             {/* Mobile Button Start */}
             <div className='block absolute right-4 lg:hidden'>
               <button
@@ -53,7 +53,7 @@ const Header = () => {
             {/* Mobile Button End */}
             <nav
               className={`absolute py-5 bg-white shadow-lg rounded-lg max-w-[250px] w-full right-4 top-full lg:block 
-              lg:static lg:bg-transparent lg:max-w-full lg:shadow-none lg:rounded-none ${
+              lg:static lg:bg-transparent lg:max-w-full lg:shadow-none lg:rounded-none  ${
                 navbar ? 'block' : 'hidden'
               }`}
             >

@@ -1,5 +1,4 @@
-import CardItem from '@/components/Card/CardItem';
-import { layananItems } from '@/common/constant/layanan';
+import Service from '@/components/Service';
 
 const Introduction = () => {
   return (
@@ -16,16 +15,7 @@ const Introduction = () => {
             kemudahan akses untuk layanan pemeliharaan hingga fitur transaksi.
           </p>
         </div>
-        <div className='max-w-full'>
-          <h3 className='font-bold text-xl md:text-2xl'>
-            Layanan AGROS Indonesia
-          </h3>
-          <div className='sm:flex sm:flex-wrap sm:gap-6 mt-6'>
-            {layananItems.map((item, index) => (
-              <CardItem key={index} {...item} alt='logo' />
-            ))}
-          </div>
-        </div>
+        <Service />
       </div>
     </section>
   );
