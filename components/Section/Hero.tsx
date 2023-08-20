@@ -1,17 +1,15 @@
-import { logoutUser, setIsLogin } from '@/redux/features/auth/authSlice';
-import { useAppDispatch, useAppSelector } from '@/redux/hook';
+import { logoutUser } from '@/redux/features/authSlice';
+import { useAppDispatch } from '@/redux/hook';
 import { useRouter } from 'next/navigation';
 
 const Hero = () => {
   const dispatch = useAppDispatch();
-  //cek apakah user sudah login
-  const isLogin = useAppSelector((state) => state.auth.isLogin);
-  const user = useAppSelector((state) => state.auth.user);
-  console.log('user', user);
   const router = useRouter();
+  const token =
+    typeof window !== 'undefined' ? localStorage.getItem('token') : null;
+
   const handleLogout = () => {
     dispatch(logoutUser()).then(() => {
-      dispatch(setIsLogin(false));
       router.push('/');
     });
   };
@@ -35,13 +33,15 @@ const Hero = () => {
             barang sampai pada tujuan. Silakan melakukan pendaftaran untuk dapat
             menikmati layanan kami.
           </p>
-          {isLogin ? (
-            <button
-              onClick={handleLogout}
-              className='bg-transparent hover:opacity-70 hover:shadow-sm active:opacity-100 rounded-lg outline outline-1 px-4 mb-2 mx-2 md:mx-1 py-2 mt-3 md:mt-4'
-            >
-              Keluar
-            </button>
+          {token ? (
+            <div>
+              <button
+                onClick={handleLogout}
+                className='bg-transparent hover:opacity-70 hover:shadow-sm active:opacity-100 rounded-lg outline outline-1 px-4 mb-2 mx-2 md:mx-1 py-2 mt-3 md:mt-4'
+              >
+                Keluar
+              </button>
+            </div>
           ) : (
             <div>
               <button

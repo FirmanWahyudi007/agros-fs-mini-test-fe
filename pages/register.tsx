@@ -5,7 +5,7 @@ import Link from 'next/link';
 import { useFormik } from 'formik';
 import { useRouter } from 'next/dist/client/router';
 import { registerType } from '@/common/types/auth';
-import { registerUser } from '@/redux/features/auth/authSlice';
+import { registerUser } from '@/redux/features/authSlice';
 import { useAppDispatch } from '@/redux/hook';
 
 const About: NextPage = () => {

@@ -57,16 +57,16 @@ export const registerUser = createAsyncThunk(
 
 export const logoutUser = createAsyncThunk('auth/logout', async () => {
   try {
-    const token = JSON.parse(localStorage.getItem('token') || '{}');
-    const response = await axios.post(API_URL + '/logout', {
-      headers: {
-        accept: 'application/json',
-        Authorization: `Bearer ${token}`,
-      },
+    const token = localStorage.getItem('token');
+    console.log(token);
+    const response = await axios.get(API_URL + '/logout', {
+      headers: { Authorization: `Bearer ${token}` },
     });
     localStorage.removeItem('user');
     localStorage.removeItem('token');
-    return response.data;
+    return {
+      message: response.data.message,
+    };
   } catch (error: any) {
     return {
       error: error.message,
@@ -102,6 +102,8 @@ export const authSlice = createSlice({
       .addCase(logoutUser.fulfilled, (state) => {
         state.status = 'idle';
         state.user = null;
+        state.token = undefined;
+        state.isLogin = false;
       })
       .addCase(logoutUser.rejected, (state, action) => {
         state.status = 'failed';

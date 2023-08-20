@@ -3,7 +3,7 @@ import { useRouter } from 'next/dist/client/router';
 import Head from 'next/head';
 import { useFormik } from 'formik';
 import { loginType } from '@/common/types/auth';
-import { loginUser, setIsLogin } from '@/redux/features/auth/authSlice';
+import { loginUser, setIsLogin } from '@/redux/features/authSlice';
 import { useAppDispatch } from '@/redux/hook';
 import Story from '@/components/Section/Story';
 
