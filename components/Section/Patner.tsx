@@ -1,13 +1,23 @@
 import { fetchUsers } from '@/redux/features/userSlice';
 import { useAppDispatch, useAppSelector } from '@/redux/hook';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
+import ModalConfirmDelete from '@/components/modal/ModalConfirmDelete';
+import { Toaster } from 'react-hot-toast';
+import Link from 'next/link';
 
 const Patner = () => {
   const dispatch = useAppDispatch();
+  const [alert, setAlert] = useState(false);
+  const [userId, setUserId] = useState(0);
   const user = useAppSelector((state) => state.user);
   const token =
     typeof window !== 'undefined' ? localStorage.getItem('token') : null;
+  const localStorageUser =
+    typeof window !== 'undefined' ? localStorage.getItem('user') : null;
 
+  //json parse
+  const userParse = JSON.parse(localStorageUser || '{}');
+  console.log('userParse', userParse);
   useEffect(() => {
     if (token) {
       if (user?.users.length === 0) {
@@ -15,6 +25,11 @@ const Patner = () => {
       }
     }
   }, [dispatch]);
+
+  const handleDelete = (id: number) => {
+    setAlert(true);
+    setUserId(id);
+  };
 
   return (
     <section className='mt-14'>
@@ -28,10 +43,13 @@ const Patner = () => {
           </p>
         </div>
         {!token ? (
-          <div className='flex justify-center mb-20'>
-            <button className='bg-primary text-white hover:bg-opacity-70 hover:shadow-sm active:bg-opacity-100 rounded-lg border border-white px-4 py-2 mt-3 mb-2 md:mt-4'>
+          <div className='flex flex-wrap justify-center mb-10'>
+            <Link
+              href='/register'
+              className='bg-primary  text-white hover:bg-opacity-70 hover:shadow-sm active:bg-opacity-100 rounded-lg border border-white px-4 py-2 mt-3 mb-2 md:mt-4'
+            >
               Daftar Sekarang
-            </button>
+            </Link>
           </div>
         ) : (
           <div className='flex flex-wrap gap-4 mb-20'>
@@ -41,22 +59,39 @@ const Patner = () => {
                   className='bg-white rounded-lg shadow-md p-6 w-[300px] h-[120px] relative'
                   key={index}
                 >
-                  <button className='absolute -top-2 -right-2 p-2 rounded-full border border-red-500 text-red-500 hover:bg-red-500 active:bg-red-400 hover:text-white focus:outline-none'>
-                    <svg
-                      className='w-4 h-4'
-                      fill='none'
-                      stroke='currentColor'
-                      viewBox='0 0 24 24'
-                      xmlns='http://www.w3.org/2000/svg'
-                    >
-                      <path
-                        strokeLinecap='round'
-                        strokeLinejoin='round'
-                        strokeWidth='5'
-                        d='M6 18L18 6M6 6l12 12'
-                      />
-                    </svg>
-                  </button>
+                  {userParse?.role === 'super admin' ? (
+                    <>
+                      {alert && (
+                        <ModalConfirmDelete
+                          title='Apakah anda yakin ingin menghapus data ini?'
+                          description='Data yang telah dihapus tidak dapat dikembalikan'
+                          cancel={() => setAlert(false)}
+                          userId={userId}
+                        />
+                      )}
+                      <button
+                        onClick={() => handleDelete(user.id)}
+                        className='absolute -top-2 -right-2 p-2 rounded-full border border-red-500 text-red-500 hover:bg-red-500 active:bg-red-400 hover:text-white focus:outline-none'
+                      >
+                        <svg
+                          className='w-4 h-4'
+                          fill='none'
+                          stroke='currentColor'
+                          viewBox='0 0 24 24'
+                          xmlns='http://www.w3.org/2000/svg'
+                        >
+                          <path
+                            strokeLinecap='round'
+                            strokeLinejoin='round'
+                            strokeWidth='5'
+                            d='M6 18L18 6M6 6l12 12'
+                          />
+                        </svg>
+                      </button>
+                    </>
+                  ) : (
+                    ''
+                  )}
                   <h2 className='font-semibold text-base lg:text-lg'>
                     {user.name}
                   </h2>

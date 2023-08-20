@@ -14,6 +14,7 @@ const Index: NextPage = () => {
         <title>Agros</title>
         <meta name='description' content='Agros Mini Test Fullstack' />
       </Head>
+
       <Hero />
       <Introduction />
       <Story />

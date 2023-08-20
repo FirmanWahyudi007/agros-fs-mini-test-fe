@@ -9,18 +9,14 @@ interface PrivateRouteProps {
 const PrivateRoute = ({ children }: PrivateRouteProps) => {
   const router = useRouter();
 
-  if (typeof window !== 'undefined' && window.innerWidth < 768) {
-    if (typeof window !== 'undefined') {
-      const token = localStorage.getItem('token');
-      if (!token) {
-        router.push('/login');
-      }
-    } else {
-      router.push('/');
+  if (typeof window !== 'undefined') {
+    const token = localStorage.getItem('token');
+    if (!token) {
+      router.push('/login');
     }
   }
 
-  return <div>{children}</div>;
+  return children;
 };
 
 export default PrivateRoute;

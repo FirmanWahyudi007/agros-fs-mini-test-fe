@@ -5,6 +5,7 @@ import '@/styles/globals.css';
 import Layout from '@/components/layouts/Layout';
 import { interFont } from '@/styles/font';
 import store from '@/redux/store';
+import { Toaster } from 'react-hot-toast';
 
 const App = ({ Component, pageProps }: AppProps) => {
   return (
@@ -18,6 +19,7 @@ const App = ({ Component, pageProps }: AppProps) => {
       </style>
       <Provider store={store}>
         <Layout>
+          <Toaster position='top-right' reverseOrder={false} />
           <Component {...pageProps} />
         </Layout>
       </Provider>

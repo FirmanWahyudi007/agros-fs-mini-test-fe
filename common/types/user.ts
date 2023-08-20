@@ -10,3 +10,9 @@ export type user = {
   city: string;
   role: role;
 };
+
+export type updateProfile = {
+  name: string;
+  city: string;
+  password?: string;
+};

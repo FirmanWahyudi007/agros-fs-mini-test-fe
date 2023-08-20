@@ -1,6 +1,7 @@
 import { userState } from '@/common/interface/userState';
 import { PayloadAction, createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import axios from 'axios';
+import { toast } from 'react-hot-toast';
 
 const initialState: userState = {
   loading: false,
@@ -21,10 +22,31 @@ export const fetchUsers = createAsyncThunk('users/fetchUsers', async () => {
   } catch (error: any) {
     return {
       error: error.message,
-      data: error.data ? error.data : null,
     };
   }
 });
+
+export const deleteUser = createAsyncThunk(
+  'users/deleteUser',
+  async (id: number) => {
+    try {
+      const response = await axios.delete(`${API_URL}/users/${id}`, {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem('token')}`,
+        },
+      });
+      toast.success(response.data.message);
+      return {
+        message: 'Delete Success',
+      };
+    } catch (error: any) {
+      console.log(error);
+      return {
+        error: error.message,
+      };
+    }
+  }
+);
 
 export const userSlice = createSlice({
   name: 'users',
@@ -42,6 +64,12 @@ export const userSlice = createSlice({
       .addCase(fetchUsers.rejected, (state, action) => {
         state.loading = false;
         state.error = action.error.message;
+      })
+      .addCase(deleteUser.pending, (state) => {
+        state.loading = true;
+      })
+      .addCase(deleteUser.fulfilled, (state, action) => {
+        state.loading = false;
       });
   },
 });

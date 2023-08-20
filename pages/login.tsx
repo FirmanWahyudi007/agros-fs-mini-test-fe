@@ -2,10 +2,18 @@ import { NextPage } from 'next';
 import { useRouter } from 'next/dist/client/router';
 import Head from 'next/head';
 import { useFormik } from 'formik';
+import * as Yup from 'yup';
 import { loginType } from '@/common/types/auth';
 import { loginUser, setIsLogin } from '@/redux/features/authSlice';
 import { useAppDispatch } from '@/redux/hook';
 import Story from '@/components/Section/Story';
+
+const LoginSchema = Yup.object().shape({
+  email: Yup.string().email('email tidak valid').required('harus diisi'),
+  password: Yup.string()
+    .min(8, 'password minimal 8 karakter')
+    .required('harus diisi'),
+});
 
 const Login: NextPage = () => {
   const dispatch = useAppDispatch();
@@ -32,6 +40,7 @@ const Login: NextPage = () => {
       email: '',
       password: '',
     },
+    validationSchema: LoginSchema,
     onSubmit: handleLogin,
   });
 
@@ -67,6 +76,11 @@ const Login: NextPage = () => {
                     placeholder='Masukan email'
                     onChange={formik.handleChange}
                   />
+                  {formik.errors.email && formik.touched.email ? (
+                    <div className='text-red-500 font-normal text-xs'>
+                      {formik.errors.email}
+                    </div>
+                  ) : null}
                 </div>
                 <div className='w-full lg:w-1/2'>
                   <label
@@ -82,6 +96,11 @@ const Login: NextPage = () => {
                     placeholder='Masukan password'
                     onChange={formik.handleChange}
                   />
+                  {formik.errors.password && formik.touched.password ? (
+                    <div className='text-red-500 font-normal text-xs'>
+                      {formik.errors.password}
+                    </div>
+                  ) : null}
                 </div>
               </div>
               <div className='w-full lg:w-1/2'>

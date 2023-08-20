@@ -2,6 +2,8 @@ import { AuthState } from '@/common/interface/authState';
 import { loginType, registerType } from '@/common/types/auth';
 import { PayloadAction, createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import axios from 'axios';
+import toast from 'react-hot-toast';
+import { updateProfile } from '@/common/types/user';
 
 const initialState: AuthState = {
   user: null,
@@ -24,15 +26,15 @@ export const loginUser = createAsyncThunk(
       localStorage.setItem('user', JSON.stringify(res.user));
 
       const bearerToken = `Bearer ${res.token.access_token}`;
-      console.log(bearerToken);
+      toast.success(response.data.message);
       return {
         user: res.user,
         bearerToken,
       };
     } catch (error: any) {
+      toast.error('Email or Password is wrong');
       return {
-        error: error.message,
-        data: error.data ? error.data : null,
+        error: error.response.data,
       };
     }
   }
@@ -42,14 +44,14 @@ export const registerUser = createAsyncThunk(
   'auth/register',
   async (data: registerType) => {
     try {
-      await axios.post(`${API_URL}/register`, data);
+      const response = await axios.post(`${API_URL}/register`, data);
+      toast.success(response.data.message);
       return {
         message: 'Register Success',
       };
     } catch (error: any) {
       return {
-        error: error.message,
-        data: error.data ? error.data : null,
+        error: error.response.data,
       };
     }
   }
@@ -64,6 +66,7 @@ export const logoutUser = createAsyncThunk('auth/logout', async () => {
     });
     localStorage.removeItem('user');
     localStorage.removeItem('token');
+    toast.success(response.data.message);
     return {
       message: response.data.message,
     };
@@ -73,6 +76,52 @@ export const logoutUser = createAsyncThunk('auth/logout', async () => {
     };
   }
 });
+
+export const profileUser = createAsyncThunk('users/profileUser', async () => {
+  try {
+    const response = await axios.get(`${API_URL}/profile`, {
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem('token')}`,
+      },
+    });
+    const res = response.data.data;
+    return {
+      users: res,
+    };
+  } catch (error: any) {
+    return {
+      error: error.message,
+    };
+  }
+});
+
+export const profileUpdate = createAsyncThunk(
+  'auth/profileUpdate',
+  async (data: updateProfile) => {
+    try {
+      //cek apakah password diisi atau tidak
+      if (data.password === '') {
+        delete data.password;
+      }
+      const response = await axios.put(`${API_URL}/profile`, data, {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem('token')}`,
+        },
+      });
+      const res = response.data.data;
+      console.log(res);
+      localStorage.setItem('user', JSON.stringify(res));
+      toast.success(response.data.message);
+      return {
+        user: res,
+      };
+    } catch (error: any) {
+      return {
+        error: error.message,
+      };
+    }
+  }
+);
 
 export const authSlice = createSlice({
   name: 'auth',
@@ -116,6 +165,28 @@ export const authSlice = createSlice({
         state.status = 'idle';
       })
       .addCase(registerUser.rejected, (state, action) => {
+        state.status = 'failed';
+        state.error = action.error.message;
+      })
+      .addCase(profileUser.pending, (state) => {
+        state.status = 'loading';
+      })
+      .addCase(profileUser.fulfilled, (state, action) => {
+        state.status = 'idle';
+        state.user = action.payload.users;
+      })
+      .addCase(profileUser.rejected, (state, action) => {
+        state.status = 'failed';
+        state.error = action.error.message;
+      })
+      .addCase(profileUpdate.pending, (state) => {
+        state.status = 'loading';
+      })
+      .addCase(profileUpdate.fulfilled, (state, action) => {
+        state.status = 'idle';
+        state.user = action.payload.user;
+      })
+      .addCase(profileUpdate.rejected, (state, action) => {
         state.status = 'failed';
         state.error = action.error.message;
       });

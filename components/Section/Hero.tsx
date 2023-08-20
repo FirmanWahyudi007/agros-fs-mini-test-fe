@@ -1,6 +1,7 @@
 import { logoutUser } from '@/redux/features/authSlice';
 import { useAppDispatch } from '@/redux/hook';
 import { useRouter } from 'next/navigation';
+import Link from 'next/link';
 
 const Hero = () => {
   const dispatch = useAppDispatch();
@@ -34,28 +35,28 @@ const Hero = () => {
             menikmati layanan kami.
           </p>
           {token ? (
-            <div>
+            <>
               <button
                 onClick={handleLogout}
                 className='bg-transparent hover:opacity-70 hover:shadow-sm active:opacity-100 rounded-lg outline outline-1 px-4 mb-2 mx-2 md:mx-1 py-2 mt-3 md:mt-4'
               >
                 Keluar
               </button>
-            </div>
+            </>
           ) : (
-            <div>
-              <button
-                onClick={() => router.push('/login')}
+            <div className='mt-4'>
+              <Link
+                href='/login'
                 className='bg-transparent hover:opacity-70 hover:shadow-sm active:opacity-100 rounded-lg outline outline-1 px-4 mb-2 mx-2 md:mx-1 py-2 mt-3 md:mt-4'
               >
                 Masuk
-              </button>
-              <button
-                onClick={() => router.push('/register')}
+              </Link>
+              <Link
+                href='/register'
                 className='bg-white text-primary hover:bg-slate-100 hover:shadow-sm active:bg-white rounded-lg border border-white px-4 py-2 mt-3 mb-2 md:mt-4 md:ml-2'
               >
                 Daftar
-              </button>
+              </Link>
             </div>
           )}
         </div>

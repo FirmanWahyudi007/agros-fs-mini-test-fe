@@ -7,8 +7,27 @@ import { useRouter } from 'next/dist/client/router';
 import { registerType } from '@/common/types/auth';
 import { registerUser } from '@/redux/features/authSlice';
 import { useAppDispatch } from '@/redux/hook';
+import * as Yup from 'yup';
+import toast from 'react-hot-toast';
 
-const About: NextPage = () => {
+const RegisterSchema = Yup.object().shape({
+  name: Yup.string().required('harus diisi'),
+  city: Yup.string().required('harus diisi'),
+  email: Yup.string().email('email is not valid').required('harus diisi'),
+  password: Yup.string()
+    .min(8, 'password minimal 8 karakter')
+    .required('harus diisi'),
+  password_confirmation: Yup.string().when('password', (password, field) =>
+    password
+      ? field
+          .required('harus diisi')
+          .oneOf([Yup.ref('password')], 'password tidak sama')
+      : field
+  ),
+  role: Yup.string().required('harus diisi'),
+});
+
+const Register: NextPage = () => {
   const router = useRouter();
   const dispatch = useAppDispatch();
   const handleRegister = async (values: registerType) => {
@@ -16,7 +35,12 @@ const About: NextPage = () => {
       const resultAction = await dispatch(registerUser(values));
       if (registerUser.fulfilled.match(resultAction)) {
         if (resultAction.payload.error) {
-          console.log('resultAction.payload', resultAction.payload);
+          const { error } = resultAction.payload;
+          if (error.message == 'Validation errors') {
+            error.data.name ? toast.error(error.data.name[0]) : null;
+            error.data.city ? toast.error(error.data.city[0]) : null;
+            error.data.email ? toast.error(error.data.email[0]) : null;
+          }
         } else {
           router.push('/login');
         }
@@ -32,8 +56,10 @@ const About: NextPage = () => {
       city: '',
       email: '',
       password: '',
+      password_confirmation: '',
       role: '',
     },
+    validationSchema: RegisterSchema,
     onSubmit: handleRegister,
   });
   return (
@@ -69,6 +95,11 @@ const About: NextPage = () => {
                     placeholder='Masukan nama'
                     onChange={formik.handleChange}
                   />
+                  {formik.errors.name && formik.touched.name ? (
+                    <div className='text-red-500 font-normal text-xs'>
+                      {formik.errors.name}
+                    </div>
+                  ) : null}
                 </div>
                 <div className='w-full lg:w-1/2'>
                   <label
@@ -85,6 +116,11 @@ const About: NextPage = () => {
                     placeholder='Masukan asal kota'
                     onChange={formik.handleChange}
                   />
+                  {formik.errors.city && formik.touched.city ? (
+                    <div className='text-red-500 font-normal text-xs'>
+                      {formik.errors.city}
+                    </div>
+                  ) : null}
                 </div>
               </div>
               <div className='flex flex-row justify-center gap-2'>
@@ -103,6 +139,11 @@ const About: NextPage = () => {
                     placeholder='Masukan email'
                     onChange={formik.handleChange}
                   />
+                  {formik.errors.email && formik.touched.email ? (
+                    <div className='text-red-500 font-normal text-xs'>
+                      {formik.errors.email}
+                    </div>
+                  ) : null}
                 </div>
                 <div className='w-full lg:w-1/2'>
                   <label
@@ -117,10 +158,15 @@ const About: NextPage = () => {
                     onChange={formik.handleChange}
                     className='w-full border border-gray-300 rounded-lg px-3 py-2 mt-1 mb-3 focus:outline-none focus:ring-1 focus:ring-primary'
                   >
-                    <option value=''>Pilih Role</option>
+                    <option>Pilih Role</option>
                     <option value='super admin'>Super Admin</option>
                     <option value='customer'>Customer</option>
                   </select>
+                  {formik.errors.role && formik.touched.role ? (
+                    <div className='text-red-500 font-normal text-xs'>
+                      {formik.errors.role}
+                    </div>
+                  ) : null}
                 </div>
               </div>
               <div className='flex flex-row justify-start gap-2'>
@@ -139,13 +185,18 @@ const About: NextPage = () => {
                     placeholder='Masukan password'
                     onChange={formik.handleChange}
                   />
+                  {formik.errors.password && formik.touched.password ? (
+                    <div className='text-red-500 font-normal text-xs'>
+                      {formik.errors.password}
+                    </div>
+                  ) : null}
                 </div>
                 <div className='w-full lg:w-1/2'>
                   <label
                     htmlFor='password_confirmation'
                     className='text-sm font-medium text-gray-700'
                   >
-                    Password
+                    Konfirmasi Password
                   </label>
                   <input
                     id='password_confirmation'
@@ -155,6 +206,12 @@ const About: NextPage = () => {
                     placeholder='Masukan konfirmasi password'
                     onChange={formik.handleChange}
                   />
+                  {formik.errors.password_confirmation &&
+                  formik.touched.password_confirmation ? (
+                    <div className='text-red-500 font-normal text-xs'>
+                      {formik.errors.password_confirmation}
+                    </div>
+                  ) : null}
                 </div>
               </div>
               <div className='w-full lg:w-1/2'>
@@ -182,4 +239,4 @@ const About: NextPage = () => {
   );
 };
 
-export default About;
+export default Register;
