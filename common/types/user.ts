@@ -4,6 +4,7 @@ enum role {
 }
 
 export type user = {
+  id: number;
   name: string;
   email: string;
   city: string;
