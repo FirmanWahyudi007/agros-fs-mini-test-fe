@@ -1,7 +1,10 @@
 import { AppProps } from 'next/app';
+import { Provider } from 'react-redux';
+
 import '@/styles/globals.css';
 import Layout from '@/components/layouts/Layout';
 import { interFont } from '@/styles/font';
+import store from '@/redux/store';
 
 const App = ({ Component, pageProps }: AppProps) => {
   return (
@@ -13,9 +16,11 @@ const App = ({ Component, pageProps }: AppProps) => {
           }
         `}
       </style>
-      <Layout>
-        <Component {...pageProps} />
-      </Layout>
+      <Provider store={store}>
+        <Layout>
+          <Component {...pageProps} />
+        </Layout>
+      </Provider>
     </>
   );
 };
