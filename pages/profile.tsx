@@ -8,6 +8,7 @@ import PrivateRoute from '@/components/PrivateRoute';
 import { Formik, Form, Field } from 'formik';
 import toast from 'react-hot-toast';
 import { updateProfile } from '@/common/types/user';
+import { fetchUsers } from '@/redux/features/userSlice';
 
 const Profile: NextPage = () => {
   const dispatch = useAppDispatch();
@@ -25,6 +26,7 @@ const Profile: NextPage = () => {
       console.log('values', values);
       const resultAction = await dispatch(profileUpdate(values));
       if (profileUpdate.fulfilled.match(resultAction)) {
+        dispatch(fetchUsers());
         if (resultAction.payload.error) {
           const { error } = resultAction.payload;
           if (error.message == 'Validation errors') {
