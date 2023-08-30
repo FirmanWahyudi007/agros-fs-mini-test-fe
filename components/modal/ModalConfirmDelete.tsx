@@ -1,12 +1,6 @@
+import { ModalConfirmDeleteProps } from '@/common/interface/modalConfirmDelete';
 import { deleteUser, fetchUsers } from '@/redux/features/userSlice';
 import { useAppDispatch } from '@/redux/hook';
-
-interface ModalConfirmDeleteProps {
-  title: string;
-  description: string;
-  cancel: () => void;
-  userId: number;
-}
 
 const ModalConfirmDelete = ({
   title,

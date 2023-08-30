@@ -2,26 +2,18 @@ import { logoutUser } from '@/redux/features/authSlice';
 import { useAppDispatch } from '@/redux/hook';
 import { useRouter } from 'next/router'; // Mengganti import dari 'next/navigation'
 import Link from 'next/link';
-import { useEffect, useState } from 'react';
+import { HeroProps } from '@/common/interface/heroProps';
 
-const Hero = () => {
+const Hero = ({ token, setToken }: HeroProps) => {
   const dispatch = useAppDispatch();
   const router = useRouter();
-  // const token =
-  //   typeof window !== 'undefined' ? localStorage.getItem('token') : null;
-  const [token, setToken] = useState('');
 
-  useEffect(() => {
-    const storedToken = window.localStorage.getItem('token');
-    if (storedToken) {
-      setToken(storedToken);
-    }
-  }, []);
   const handleLogout = async () => {
     // Menambahkan async
     try {
       await dispatch(logoutUser()); // Menunggu pemanggilan async selesai
       router.push('/');
+      setToken('');
     } catch (error) {
       console.error('Error logging out:', error);
     }

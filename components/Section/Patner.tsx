@@ -3,20 +3,13 @@ import { useAppDispatch, useAppSelector } from '@/redux/hook';
 import { useEffect, useState } from 'react';
 import ModalConfirmDelete from '@/components/modal/ModalConfirmDelete';
 import Link from 'next/link';
+import { PatnerProps } from '@/common/interface/patnerProps';
 
-const Patner = () => {
+const Patner = ({ token }: PatnerProps) => {
   const dispatch = useAppDispatch();
   const [alert, setAlert] = useState(false);
   const [userId, setUserId] = useState(0);
   const user = useAppSelector((state) => state.user);
-  const [token, setToken] = useState('');
-
-  useEffect(() => {
-    const storedToken = window.localStorage.getItem('token');
-    if (storedToken) {
-      setToken(storedToken);
-    }
-  }, []);
 
   const localStorageUser =
     typeof window !== 'undefined' ? localStorage.getItem('user') : null;
@@ -24,7 +17,6 @@ const Patner = () => {
   //json parse
   const userParse = JSON.parse(localStorageUser || '{}');
   useEffect(() => {
-    console.log('token' + token);
     if (token) {
       if (user?.users.length === 0) {
         dispatch(fetchUsers());

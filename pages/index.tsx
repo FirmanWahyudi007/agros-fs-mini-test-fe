@@ -4,8 +4,17 @@ import Hero from '@/components/Section/Hero';
 import Introduction from '@/components/Section/Introduction';
 import Story from '@/components/Section/Story';
 import Patner from '@/components/Section/Patner';
+import { useEffect, useState } from 'react';
 
 const Index: NextPage = () => {
+  const [token, setToken] = useState('');
+
+  useEffect(() => {
+    const storedToken = window.localStorage.getItem('token');
+    if (storedToken) {
+      setToken(storedToken);
+    }
+  }, []);
   return (
     <>
       <Head>
@@ -13,10 +22,10 @@ const Index: NextPage = () => {
         <meta name='description' content='Agros Mini Test Fullstack' />
       </Head>
 
-      <Hero />
+      <Hero token={token} setToken={setToken} />
       <Introduction />
       <Story />
-      <Patner />
+      <Patner token={token} />
     </>
   );
 };
