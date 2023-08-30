@@ -2,7 +2,6 @@ import { fetchUsers } from '@/redux/features/userSlice';
 import { useAppDispatch, useAppSelector } from '@/redux/hook';
 import { useEffect, useState } from 'react';
 import ModalConfirmDelete from '@/components/modal/ModalConfirmDelete';
-import { Toaster } from 'react-hot-toast';
 import Link from 'next/link';
 
 const Patner = () => {
@@ -10,21 +9,29 @@ const Patner = () => {
   const [alert, setAlert] = useState(false);
   const [userId, setUserId] = useState(0);
   const user = useAppSelector((state) => state.user);
-  const token =
-    typeof window !== 'undefined' ? localStorage.getItem('token') : null;
+  const [token, setToken] = useState('');
+
+  useEffect(() => {
+    const storedToken = window.localStorage.getItem('token');
+    if (storedToken) {
+      setToken(storedToken);
+    }
+  }, []);
+
   const localStorageUser =
     typeof window !== 'undefined' ? localStorage.getItem('user') : null;
 
   //json parse
   const userParse = JSON.parse(localStorageUser || '{}');
-  console.log('userParse', userParse);
   useEffect(() => {
+    console.log('token' + token);
     if (token) {
       if (user?.users.length === 0) {
         dispatch(fetchUsers());
       }
     }
-  }, [dispatch]);
+  }, [dispatch, token]);
+  console.log(user);
 
   const handleDelete = (id: number) => {
     setAlert(true);

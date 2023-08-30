@@ -1,19 +1,32 @@
 import { logoutUser } from '@/redux/features/authSlice';
 import { useAppDispatch } from '@/redux/hook';
-import { useRouter } from 'next/navigation';
+import { useRouter } from 'next/router'; // Mengganti import dari 'next/navigation'
 import Link from 'next/link';
+import { useEffect, useState } from 'react';
 
 const Hero = () => {
   const dispatch = useAppDispatch();
   const router = useRouter();
-  const token =
-    typeof window !== 'undefined' ? localStorage.getItem('token') : null;
+  // const token =
+  //   typeof window !== 'undefined' ? localStorage.getItem('token') : null;
+  const [token, setToken] = useState('');
 
-  const handleLogout = () => {
-    dispatch(logoutUser()).then(() => {
+  useEffect(() => {
+    const storedToken = window.localStorage.getItem('token');
+    if (storedToken) {
+      setToken(storedToken);
+    }
+  }, []);
+  const handleLogout = async () => {
+    // Menambahkan async
+    try {
+      await dispatch(logoutUser()); // Menunggu pemanggilan async selesai
       router.push('/');
-    });
+    } catch (error) {
+      console.error('Error logging out:', error);
+    }
   };
+
   return (
     <section className='mt-14 mb-1'>
       <div
@@ -35,25 +48,23 @@ const Hero = () => {
             menikmati layanan kami.
           </p>
           {token ? (
-            <>
-              <button
-                onClick={handleLogout}
-                className='bg-transparent hover:opacity-70 hover:shadow-sm active:opacity-100 rounded-lg outline outline-1 px-4 mb-2 mx-2 md:mx-1 py-2 mt-3 md:mt-4'
-              >
-                Keluar
-              </button>
-            </>
+            <button
+              onClick={handleLogout}
+              className='bg-transparent hover:opacity-70 hover:shadow-sm active:opacity-100 rounded-lg outline outline-1 px-4 mb-2 mx-2 md:mx-1 py-2 mt-4 '
+            >
+              Keluar
+            </button>
           ) : (
             <div className='mt-4'>
               <Link
                 href='/login'
-                className='bg-transparent hover:opacity-70 hover:shadow-sm active:opacity-100 rounded-lg outline outline-1 px-4 mb-2 mx-2 md:mx-1 py-2 mt-3 md:mt-4'
+                className='bg-transparent hover:opacity-70 hover:shadow-sm active:opacity-100 rounded-lg outline outline-1 px-4 mb-2 mx-2 md:mx-1 py-2  '
               >
                 Masuk
               </Link>
               <Link
                 href='/register'
-                className='bg-white text-primary hover:bg-slate-100 hover:shadow-sm active:bg-white rounded-lg border border-white px-4 py-2 mt-3 mb-2 md:mt-4 md:ml-2'
+                className='bg-white text-primary hover:bg-slate-100 hover:shadow-sm active:bg-white rounded-lg border border-white px-4 py-2 mb-2 md:ml-2'
               >
                 Daftar
               </Link>
